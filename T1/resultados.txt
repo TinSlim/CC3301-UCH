@@ -1,0 +1,28 @@
+Linux DESKTOP-8RSTL76 4.19.104-microsoft-standard #1 SMP Wed Feb 19 06:37:35 UTC 2020 x86_64 GNU/Linux
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+
+depuración activada
+Con divisiones y restos tomo 11252 milisegundos
+Su funcion tomo 3525 milisegundos
+El speed up es 3.2x
+
+
+optimización activada
+Con divisiones y restos tomo 6970 milisegundos
+Su funcion tomo 777 milisegundos
+El speed up es 9.0x
+
+
+32 bits
+Con divisiones y restos tomo 11612 milisegundos
+Su funcion tomo 2585 milisegundos
+El speed up es 4.5x

@@ -1,0 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "t1.h"
+
+// Implemente aca la funcion dupMasLargo

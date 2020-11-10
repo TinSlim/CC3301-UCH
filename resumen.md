@@ -199,3 +199,79 @@ Son char* y terminan en 0.
 
 - ``strlen(s)`` Entrega largo de String s.
 - ``strcpy(s,"bye")`` s pasa a ser bye
+
+Si s es menor a la palabra que se le reemplaza, se escribe en memoria no solicitada.
+
+# Typedef
+
+```c
+typedef unsigned int uint;
+uint a = 1; // es unsigned int
+
+typedef unsigned int* puint;
+puint p; //es puntero a unsigned int
+``` 
+
+# Estructuras
+
+### Ejemplo complejos:
+
+```c
+// Se crea estructura
+struct compl {
+    double r,im;
+}
+
+// Se crea un número complejo
+struct compl x;
+x.r = 2.5; x.im = -5.8;
+``` 
+
+
+```c
+// Se usa typedef
+typedef struct compl Compl;
+
+// Se crea número complejo
+Compl z = {1,10}
+``` 
+
+## Funciones con estructuras
+
+### Ejemplo suma de complejos
+
+```c
+Compl suma (Compl x, Compl y) {
+    Compl z = { x.r + y.r , x.im + y.im}
+    return z;
+}
+``` 
+
+### Ejemplo mover un complejo
+
+```c
+void mover (Compl* p, double r, double im) {
+    pz->r += r;
+    pz->im += im;
+}
+``` 
+
+### Crear un complejo nuevo
+
+```c
+Compl* nuevoCompl (double r, double im) {
+    Compl *z = malloc(sizeof(Compl));
+    z->r = r;
+    z->im = im;
+    return z;
+}
+``` 
+
+Se pueden armar estructuras de datos recursivas, para se debe usar puntero a estructura. Además crear estructuras con typedef.
+
+```c
+typedef struct nodo {
+    int x;
+    Nodo *prox;
+} Nodo;
+``` 

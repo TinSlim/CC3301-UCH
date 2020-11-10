@@ -183,3 +183,19 @@ free(r);
 // Libera la memoria
 ```
 Puntero nulo es **NULL**, que corresponde a dirección 0x00.
+
+
+# Strings
+
+Son char* y terminan en 0.
+
+| 'h' | 'o' | 'l' | 'a' | 0 |
+
+### Tipos
+
+**String Constante:** Se escriben: `` char *r = "hola"; `` , estos son inmutables.
+
+**String:** Se escriben: `` char r[] = "hola"; `` , en estos casos se puede hacer `` r[0] = 'H'; `` y cambiará la primera letra.
+
+- ``strlen(s)`` Entrega largo de String s.
+- ``strcpy(s,"bye")`` s pasa a ser bye

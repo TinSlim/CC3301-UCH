@@ -71,5 +71,115 @@
   - 0-(127 + 2 = 129 en binario)-(1001)
   - Se obtiene **0|10000001|10010000...**
 
+# Precedencia y Asociatividad
+
+%% ToDo %%
   
-  
+## Overflow
+
+Cualquier operación entera devuelva al menos un entero
+```c
+char a = 127; //127 es lo máximo para un char
+char b = 1;
+int c = a + b; // -128, se convierte en la suma int
+```
+
+# Bits Operaciones
+
+## Operaciones
+
+| Símbolo | Operación   | Ejemplo      | Resultado |
+|---------|-------------|--------------|-----------|
+| &       | and         | 1100 & 1010  | 1000      |
+| \|      | or          | 1100 \| 1010 | 1110      |
+| ^       | xor         | 1100 ^ 1010  | 0110      |
+| ~       | not         | ~1100        | 0011      |
+| <<      | shift left  | 111011<<2    | 101100    |
+| >>      | shift right | 111011>>2    | 001110    |
+
+**Ojo**, si el número posee signo negativo, al usar >>, aparencen 1s.
+
+## Mapa de Bits
+
+%% ToDo %%
+
+##  Máscaras
+
+- X & m : borra bits de x que en **m** son 0.
+- X | m : enciende bits de x que en **m** son 1.
+
+- j primeros bits en 0 : ( (unsigned) -1 ) >> j.
+- j últimos bits en 0 : ( (unsigned) -1 ) << j.
+
+
+# Variables
+```c
+char a;     // Declaración
+char b = 1; // Asignación
+```
+
+Variables Globales: Van afuera de **toda** función. Se crean cuando parte la ejecución.
+
+```c
+int u;     // Bueno
+int v = 1; // Bueno
+int v = u; // Malo
+```
+
+Si se instancia nuevamente una de la variables globales en una función (ej main), se usa la de la función.
+
+
+# Punteros
+
+## Punteros
+
+```c
+int v = 20;
+int *p;     // Puntero
+```
+
+Puntero apunta al byte más pequeño.
+Operador contenido es * y dirección **&**.
+```c
+v = 22;
+p = &v;     // Apunta a v
+int c = *p; // c = v
+```
+
+## Arreglos
+
+```c
+int arr[10];  // Arreglo de 10 elementos (0...9)
+arr[0] = 0;   // Primer elemento = 0
+int* p, q;    // p es puntero, q es entero
+```
+
+## Funciones útiles
+
+### Swap
+
+```c
+void swap (int *p, int *q) {
+    int t = *p;
+    *p = *q;
+    *q = t;
+}
+```
+### Swap de Punteros
+```c
+void swap_ptr (int **p, int **q) {
+    int *t = *p;
+    *p = *q;
+    *q = t;
+}
+```
+
+## Variables Dinámicas
+
+```c
+int *r = malloc(10 * sizeof(int)); 
+// Crea un arreglo de 10 elementos
+free(r);
+// Libera la memoria
+```
+Puntero nulo es **NULL**, que corresponde a dirección 0x00.

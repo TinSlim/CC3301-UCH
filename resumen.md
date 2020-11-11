@@ -314,3 +314,111 @@ miFuncion = f; // f se creó arriba
 (*miFuncion) (2.32)
 ```
 
+# Archivos
+
+- El tipo para los archivos es FILE.
+-  Se debe importar con:
+```c
+ #include <stdio.h>
+ ```
+- Para abrir un archivo:
+ ```c
+ // Lectura
+ FILE *in = fopen("pers.txt","r");
+
+ // Ecritura 
+FILE *in = fopen("pers.txt","w");
+
+// Ambos
+FILE *in = fopen("pers.txt","r+");
+```
+
+- Para leer texto:
+```c
+// Lee un byte y entrega EOF si acabó el archivo, es un char
+int fgetc(FILE *stream);
+
+// Lee una línea en un string de a lo más size-1 bytes, si size<len(linea), corta la línea
+char *fgets(char *s, int size, FILE *stream);
+```
+- Para escribir texto:
+```c
+// Escribe un char, se entrega como int
+int fputc(int char, FILE *stream);
+
+// Escribe un string
+int fputs(const char* s, FILE *stream);
+```
+
+- Con formato
+```c
+// Envía texto formateado al stream
+int fprintf(FILE *stream, const char *format, ...);
+// Ej: fprintf(fp, "%s %s %s %d", "We", "are", "in", 2020);
+
+// Lee texto formateado del stream
+int fscanf(FILE *stream, const char *format, ...);
+// Ej: fscanf(fp, "%s %s %s %d", str1, str2, str3, &year);
+```
+
+- Otras funciones
+```c
+// Chequea fin del archivo
+int feof(FILE *stream);
+
+// Chequea error
+int ferror(FILE *stream);
+
+// Avanza cabezal
+int fseek(FILE *stream, long offset, int whence);
+
+// Cierra el archivo
+int fclose(FILE *stream);
+```
+Para fseek se tienen 3 valores para  ``whence``, que es desde donde se empieza el offset:
+  - ``SEEK_SET`` : Inicio del archivo.
+  - ``SEEK_CUR`` : Posición actual.
+  - ``SEEK_END`` : Fin del archivo.
+  
+Preferir funciones que usen buffer, ya que son más seguras.
+
+## Archivos Binarios
+
+```c
+// Lectura
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+
+// Escritura
+size_t fwrite(void *ptr, size_t size, size_t nmemb, FILE *stream);
+```
+Los parámetros son ``size``, que es el tamaño en bytes del elemento y ``nmemb`` la cantidad de elementos, ``ptr`` es un bloque de memoría de donde se escribe o donde se guarda.
+
+### Ejemplo de uso:
+```c
+FILE *out = fopen("pers.bin","w");
+fwrite(pers, sizeof(Persona),3,out);
+fclose(out);
+
+FILE *in = fopen("pers.bin","r");
+Persona *pers2 = malloc(100*sizeof(Persona));
+int ent = fread(pers2,sizeof(Persona),100,in);
+```
+Escribir en disco ocurre cuando:
+  - Se llena el buffer.
+  - Se cierra el archivo (``fclose(stream)``).
+  - Se usa ``fflush(stream)``.
+
+Para los errores:
+  - ``fopen`` retorna NULL.
+  - ``fread`` retorna negativo.
+  - Para explicar error usar:
+  ```c
+  void perror(const char *str);
+  ```
+
+  Para determinar el tamaño del archivo:
+  ```c
+  fseek(archivo,0,SEEK_END);
+  int sizeFile = ftell(archivo);
+  int numElements = sizeFile / sizeof(Elements);
+  ```

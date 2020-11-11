@@ -275,3 +275,42 @@ typedef struct nodo {
     Nodo *prox;
 } Nodo;
 ``` 
+
+## Puntero a Función
+
+Se crean funciones.
+```c
+double f( double x ) {
+    . . .
+}
+
+double g( double x ) {
+    . . .
+}
+```
+
+Se crea función que recibe función como parámetro.
+```c
+void H(Fun r) {   // H(f) {
+    . . .         // . . . 
+    (*r)(4.8);    // f(4.8);
+}                 //}
+``` 
+
+``Fun`` es tipo puntero a función que recibe un ``double`` y entrega un ``double``, se pueden declarar más tipos así con:
+```c
+typedef double (*Fun) (double);
+``` 
+
+Entonces, para declarar un puntero a función se puede hacer así:
+```c
+// Crea el puntero a función que recibe un double, entrega un double y el puntero se llama miFuncion
+double (*miFuncion) (double); 
+
+// Se apunta el puntero a una función ya creada
+miFuncion = f; // f se creó arriba
+
+// Para usarla usar * y valores que recibe
+(*miFuncion) (2.32)
+```
+

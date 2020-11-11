@@ -422,3 +422,30 @@ Para los errores:
   int sizeFile = ftell(archivo);
   int numElements = sizeFile / sizeof(Elements);
   ```
+
+  # Threads
+  Importar con:
+  ```c
+  #include <pthread.h>
+  ```
+  
+  Funciones de threads:
+  ```c
+// Crear thread
+int pthread_create(pthread *thread, pthread_attr *attr, void *(*start) (void *arg), void *arg);
+
+int pthread_create(pthread *t, NULL, void *(*f) (void *a), void *a);
+
+// Esperar un thread
+int pthread_join(pthread_t t, void**pret);
+
+int pthread_join(pthread_t t, NULL);
+```
+
+### ¿Cómo abordar un ejercicio de Threads?
+1. Revisar parámetros y retorno de la función que se va a paralelizar.
+2. Crear una estructura donde se pueda guardar los resultados de la función.
+3. Crear una función de tipo ``void *f_thread (void *ptr)`` que recibe la estructura y usa la función **paralelizable**.
+4. En función grande, crear tantos thread y estructuras como se quiera tener.
+5. Hacer el ciclo ``for`` que haga ``pthread_create`` para cada estructura con su respectivo thread.
+6. Hacer el ciclo ``for``que haga ``pthread_join`` para obtener resultados. 

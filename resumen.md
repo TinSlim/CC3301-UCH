@@ -199,6 +199,7 @@ Son char* y terminan en 0.
 
 - ``strlen(s)`` Entrega largo de String s.
 - ``strcpy(s,"bye")`` s pasa a ser bye
+- ``strcmp(const char *str1, const char *str2)`` entrega 0< si str1<str2, entrega 0 si son iguales y 0> si str1>str2.
 
 Si s es menor a la palabra que se le reemplaza, se escribe en memoria no solicitada.
 

@@ -449,4 +449,275 @@ int pthread_join(pthread_t t, NULL);
 3. Crear una función de tipo ``void *f_thread (void *ptr)`` que recibe la estructura y usa la función **paralelizable**.
 4. En función grande, crear tantos thread y estructuras como se quiera tener.
 5. Hacer el ciclo ``for`` que haga ``pthread_create`` para cada estructura con su respectivo thread.
-6. Hacer el ciclo ``for``que haga ``pthread_join`` para obtener resultados. 
+6. Hacer el ciclo ``for`` que haga ``pthread_join`` para obtener resultados. 
+
+
+# Mutex
+
+Perminten la exclusión mutua, haciendo que una zona crítica quede cerrada y se espera a que se desocupe para acceder a ella denuevo.
+
+Operaciones:
+
+```c
+// Inicia Mutex
+int pthread_mutex_init(pthread_mutex_t *m, NULL)
+
+// Destruye Mutex
+int pthread_mutex_destroy(pthread_mutex_t *m)
+
+// Bloquea Mutex
+int pthread_mutex_lock(pthread_mutex_t *m)
+
+// Desbloquea Mutex
+int pthread_mutex_unlock(pthread_mutex_t *m)
+```
+
+Ejemplo uso:
+
+```c
+Diccionario dicc;
+thread_mutex_t m;
+
+void init() {
+  dicc = nuevo Diccionario();
+  pthread_mutex_init(&m,NULL)
+}
+
+int autorizar(int cuenta, int monto) {
+  int ret = 0; // Falso
+  pthread_mutex_lock(&m);                   // Se bloquea
+  if (monto <= saldo) {                     //
+    int nuevo_saldo = saldo - monto;        //
+    modificar(dicc, cuenta, nuevo_saldo);   //
+    ret = 1;                                //
+  }                                         //
+  pthread_mutex_unlock(&m);                 // Se desbloquea
+  return res;
+}
+```
+
+# Condiciones
+
+Perminte esperar eficientemente hasta que ocurra el evento.
+
+Operaciones:
+
+```c
+// Inicia Condición
+int pthread_cond_init(pthread_cond_t *cond, NULL);
+
+// Destruye Condición
+int pthread_cond_destroy(pthread_cond_t *cond);
+
+// Espera
+int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *m);
+
+// Despierta todos
+int pthread_cond_broadcast(pthread_cond_t *cond);
+
+// Despierta solo uno
+int pthread_cond_signal(pthread_cond_t *cond);
+```
+
+Ejemplo de read:
+
+```c
+int writing = 0; // Falso
+pthread_mutex m;
+pthread_cond c;
+
+void enterRead() {
+  lock(&m);          // Se bloquea
+  while (writing) {  //
+    wait(&c,&m)      // Se espera 
+  }                  //
+  readers++;         //
+  unlock(&m);        // Se desbloquea
+}
+```
+
+
+# Sistema de Archivos
+Ejemplos:
+```c
+int fd_in = open("/home/jperez/datos.txt", O_RDONLY);
+int fd_out = open("salida.txt", O_WRONLY | O_CREAT)
+```
+> ``fd_in`` y ``fd_out`` son file descriptors, identifican un archivo.
+
+> Al dejar de usar se debe cerrar: ``int close(int fd);``.
+
+**Para leer:**
+```c
+ssize_t read(int fd, void *buf, size_t nbytes);
+```
+Donde buf es donde se leerá, lee nbytes desde fd. Retorna cantidad efectiva de bytes leídos, si devuelve 0 se alcanzó fin del archivo y <0 en caso de error.
+
+**Para escribir:**
+```c
+ssize_t write(int fd, void *buf, size_t nbytes);
+```
+Debe retornar nbytes, sino hubo error. 
+
+Todo programa ya tiene file desriptors:
+- 0: Entrada estándar.
+- 1: Salida estándar.
+- 2: Salida estándar de errores.
+
+**Permisos**
+
+Hay tres de usario:
+- Propietario = U.
+- Grupo = G.
+- Otro.
+
+Hay 3 de accesos:
+- Lectura = r.
+- Escritura = w.
+- Execución: x.
+
+CHMOD permite definir permisos para acceder a archivo:
+```shell
+$ chmod ug = rw datos.txt
+```
+Ver permisos:
+```shell
+$ ls -l datos.txt
+```
+
+
+TODO más de archivos
+
+
+# Procesos
+
+Para crear procesos se debe usar un ``Fork``. Los procesos tienen un **PID**. Retorna dos veces, en el padre el **PID** del hijo y en el hijo 0.
+
+Ejemplo:
+
+```c
+int g = 0;
+int main() {
+  pid_t child = fork();
+  if (child == 0) {
+    g = v = 1;
+    printf("Hijo g= %d v = %d \n",g,v);
+    exit(210);
+  }
+  else {
+    int status;
+    waitpid(child,&status,0);  // Espera muerte del hijo
+    int rc = EXITSTATUS(status)
+    printf("Hijo g= %d v = %d \n",g,v);
+  }
+}
+```
+```shell
+$ Hijo g=1 v=1
+$ Padre g=0 v=0 rc=210 child=1013
+```
+
+El proceso hijo muere al usar exit, el padre debe enterrar a sus hijos con ``waitpid``.
+
+Si el pid de waitpid es -1, se espera a cualquier hijo y se entrega el pid del que terminó.
+
+# Pipes
+
+Es un canal de comunicación entre procesos.
+Se crean con:
+
+```c
+int fds[2];
+pipe(fds);
+```
+Donde ``fds[0]`` sera file descriptor de lectura y ``fds[1]`` de escritura.
+
+Ejemplo:
+
+```c
+int fd[2];
+pipe(fd);
+pid_t pid = fork();
+if (pid ==0){
+  close(fd[0]);
+  qsort(a,i,h-1);
+  write(fd[1],&a[1],(n-1) * sizeof(int));
+  exit(0);
+}
+else {
+  close(fd[1]);
+  qsort(a,n+1);
+  read(fd[0],&a[i],(n-1) * sizeof(int)); // preferir usar leer
+  close(fd[0]);
+  waitpid(..);
+}
+```
+
+# Set Jump / Long Jump
+
+Uso:
+```c
+jmp_buf exp; // global
+
+if (setjmp(exp) == 0) { // try
+   ...
+} else {  // catch
+   ...
+}
+
+// En alguna parte del try:
+if (...) {
+  longjmp(excp,1); // throw
+}
+```
+
+# Señales
+
+Ejemplo con global:
+
+```c
+volatile int cont;
+void ring() {
+  cont = 0;
+}
+
+long long buscarFactor( . . . ) {
+  uint k;
+  cont = 1;
+  void(*hdlr)() = signal(SIGALRM,ring);
+  alarm(deltat); // usa el tiempo deltat en el cronometro
+  for (k=1; k<= j && cont; k++) {
+    if (x%k == 0)
+      break;
+  }
+  alarm(0); // desactiva cronometro
+  signal(SIGALRM,hdlr); // restaura la rutina
+  . . .
+}
+```
+**Con Jump**
+```c
+jmp_buf excp;
+void ring() {
+  longjmp(excp,1);
+}
+
+long long buscarFactor( . . . ) {
+  uint k;
+  cont = 1;
+  void(*hdlr)() = signal(SIGALRM,ring);
+  
+  if (setjmp(excp) == 0) {
+    alarm(deltat);
+    for (k=1; k<= j && cont; k++) {
+      if (x%k == 0)
+        break;
+    }
+  }
+  else {
+  }
+  alarm(0); // desactiva cronometro
+  signal(SIGALRM,hdlr); // restaura la rutina
+  . . .
+}
+```

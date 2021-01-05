@@ -649,7 +649,7 @@ else {
   qsort(a,n+1);
   read(fd[0],&a[i],(n-1) * sizeof(int)); // preferir usar leer
   close(fd[0]);
-  waitpid(..);
+  waitpid(pid,NULL,);
 }
 ```
 
@@ -721,3 +721,24 @@ long long buscarFactor( . . . ) {
   . . .
 }
 ```
+
+
+-------
+
+# Anexos
+
+Leer
+
+```c
+int leer (int fd, void *buff, int n) {
+  if (n == 0) 
+    return 0;
+  do {
+    int rc = read(fd,buf,n);
+    if (rc <= 0) 
+      return 1;
+    n -= rc;
+    buf = (char*) buf + rc;
+  } while (n > 0);
+  return 0;
+}
